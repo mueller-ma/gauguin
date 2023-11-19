@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - github-action-caching
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
