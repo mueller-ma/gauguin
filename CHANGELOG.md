@@ -37,6 +37,7 @@ As Google play refuses to accept this version code after an aborted creation of 
 ## [0.11.0] - 2023-11-18
 
 ### Added
+//test
 
 - Add monochrome launcher icon to be use with e.g. Android 13 and Themed Icons.
 
