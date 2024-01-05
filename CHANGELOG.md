@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Limit maximum size of a grid cell to 96dp. Avoids overly huge cells.
 - Grids now get saved via Yaml files. A migration of the old XML files will be triggered
-  automatically when starting the app.
+  automatically when starting the app.rgere
   
   This enables further development of grid types, removes a lot of legacy code, a relevant technical
   dept makes the main developer sleep better.
