@@ -134,10 +134,22 @@ dependencies {
     implementation(libs.thirdparty.ferriswheel)
     implementation(libs.thirdparty.navigationdrawer)
     implementation(libs.thirdparty.balloon)
+
+    testImplementation(libs.bundles.kotest)
 }
 
 sonarqube {
     properties {
         property("sonar.androidLint.reportPaths", "$projectDir/build/reports/lint-results-debug.xml")
+    }
+}
+
+tasks.create("jacocoUnitTestReport", JacocoReport::class.java) {
+    // dependsOn(tasks.named("testDebugUnitTest"))
+
+    reports {
+        csv.required = false
+        xml.required = true
+        html.required = true
     }
 }
