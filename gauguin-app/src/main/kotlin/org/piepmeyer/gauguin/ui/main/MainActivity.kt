@@ -315,7 +315,6 @@ class MainActivity : AppCompatActivity(), GridCreationListener {
 
         if (newGame) {
             game.grid.isActive = true
-            statisticsManager.storeStatisticsAfterNewGame(game.grid)
             gameLifecycle.startNewGrid()
         }
     }
