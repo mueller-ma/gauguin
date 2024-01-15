@@ -16,7 +16,7 @@ class GridCreator(
     private val rater = GameDifficultyRater()
     private val variantRating = rater.byVariant(variant)
 
-    fun createRandomizedGridWithCages(): Grid {
+    suspend fun createRandomizedGridWithCages(): Grid {
         randomizer.discard()
 
         var newGrid: Grid
@@ -40,7 +40,7 @@ class GridCreator(
         }
     }
 
-    private fun createCages(grid: Grid) {
+    private suspend fun createCages(grid: Grid) {
         val creator = GridCageCreator(randomizer, grid)
         creator.createCages()
     }

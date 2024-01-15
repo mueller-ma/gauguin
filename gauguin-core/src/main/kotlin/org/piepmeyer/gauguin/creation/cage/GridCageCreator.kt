@@ -1,5 +1,7 @@
 package org.piepmeyer.gauguin.creation.cage
 
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.ensureActive
 import org.piepmeyer.gauguin.Randomizer
 import org.piepmeyer.gauguin.grid.Grid
 import org.piepmeyer.gauguin.grid.GridCage
@@ -7,21 +9,25 @@ import org.piepmeyer.gauguin.grid.GridCageAction
 import org.piepmeyer.gauguin.grid.GridCell
 import org.piepmeyer.gauguin.options.GridCageOperation
 import org.piepmeyer.gauguin.options.SingleCageUsage
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 class GridCageCreator(
     private val randomizer: Randomizer,
     private val grid: Grid,
 ) {
-    fun createCages() {
+    suspend fun createCages() {
         var restart: Boolean
         do {
             restart = false
             var cageId = 0
-            if (grid.options.singleCageUsage == SingleCageUsage.FIXED_NUMBER) {
+            if (grid.options.singleCageUsage == SingleCageUsage.FIXED_NUMBER || !grid.gridSize.isSquare) {
                 cageId = createSingleCages()
             }
             for (cell in grid.cells) {
+                currentCoroutineContext().ensureActive()
+
                 if (cell.cellInAnyCage()) {
                     continue
                 }
@@ -63,8 +69,28 @@ class GridCageCreator(
         return null
     }
 
-    private fun createSingleCages(): Int {
-        val singles = (sqrt(grid.gridSize.surfaceArea.toDouble()) / 2).toInt()
+    private suspend fun createSingleCages(): Int {
+        val minimumSingles =
+            if (grid.options.singleCageUsage == SingleCageUsage.FIXED_NUMBER) {
+                (sqrt(grid.gridSize.surfaceArea.toDouble()) / 2).toInt()
+            } else {
+                0
+            }
+
+        val singles =
+            if (grid.gridSize.isSquare) {
+                minimumSingles
+            } else {
+                // This must be a non-square grid
+                max(
+                    minimumSingles,
+                    min(
+                        grid.gridSize.smallestSide(),
+                        4 * (grid.gridSize.largestSide() - grid.gridSize.smallestSide()),
+                    ),
+                )
+            }
+
         val rowUsed = BooleanArray(grid.gridSize.height)
         val colUsed = BooleanArray(grid.gridSize.width)
         val valUsed = BooleanArray(grid.gridSize.amountOfNumbers)
@@ -74,6 +100,8 @@ class GridCageCreator(
             var cellIndex: Int
 
             do {
+                currentCoroutineContext().ensureActive()
+
                 cell =
                     grid.getCell(
                         randomizer.nextInt(grid.gridSize.surfaceArea),
