@@ -85,7 +85,7 @@ class GridCageCreator(
                 max(
                     minimumSingles,
                     min(
-                        grid.gridSize.surfaceArea / 2,
+                        grid.gridSize.surfaceArea / 3,
                         3 * (grid.gridSize.largestSide() - grid.gridSize.smallestSide()),
                     ),
                 )
@@ -95,23 +95,16 @@ class GridCageCreator(
         val colUsed = BooleanArray(grid.gridSize.width)
         val valUsed = BooleanArray(grid.gridSize.amountOfNumbers)
 
+        val freeCells = grid.cells.toMutableList()
+
         for (cageId in 0 until singles) {
-            var cell: GridCell
-            var cellIndex: Int
-
-            // do {
-            currentCoroutineContext().ensureActive()
-
-            cell =
-                grid.getCell(
-                    randomizer.nextInt(grid.gridSize.surfaceArea),
+            val cell =
+                freeCells.random(
+                    randomizer.random(),
                 )
-            cellIndex = grid.options.digitSetting.indexOf(cell.value)
-            // } while (rowUsed[cell.row] || colUsed[cell.column] || valUsed[cellIndex])
 
-            colUsed[cell.column] = true
-            rowUsed[cell.row] = true
-            valUsed[cellIndex] = true
+            freeCells -= cell
+
             val cage = GridCage.createWithSingleCellArithmetic(cageId, grid, cell)
             grid.addCage(cage)
         }
