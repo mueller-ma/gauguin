@@ -85,8 +85,8 @@ class GridCageCreator(
                 max(
                     minimumSingles,
                     min(
-                        grid.gridSize.smallestSide(),
-                        4 * (grid.gridSize.largestSide() - grid.gridSize.smallestSide()),
+                        grid.gridSize.surfaceArea / 2,
+                        3 * (grid.gridSize.largestSide() - grid.gridSize.smallestSide()),
                     ),
                 )
             }
@@ -99,15 +99,15 @@ class GridCageCreator(
             var cell: GridCell
             var cellIndex: Int
 
-            do {
-                currentCoroutineContext().ensureActive()
+            // do {
+            currentCoroutineContext().ensureActive()
 
-                cell =
-                    grid.getCell(
-                        randomizer.nextInt(grid.gridSize.surfaceArea),
-                    )
-                cellIndex = grid.options.digitSetting.indexOf(cell.value)
-            } while (rowUsed[cell.row] || colUsed[cell.column] || valUsed[cellIndex])
+            cell =
+                grid.getCell(
+                    randomizer.nextInt(grid.gridSize.surfaceArea),
+                )
+            cellIndex = grid.options.digitSetting.indexOf(cell.value)
+            // } while (rowUsed[cell.row] || colUsed[cell.column] || valUsed[cellIndex])
 
             colUsed[cell.column] = true
             rowUsed[cell.row] = true
